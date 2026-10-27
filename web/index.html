@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galileo / Z-Games — an accessible shell for Z-machine games</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>Galileo <span class="thin">/ Z-Games</span></h1>
+  <div class="top-actions">
+    <span class="games-label">Games:</span>
+    <button id="gameFigaro" type="button">Figaro (starter)</button>
+    <button id="gameLantern" type="button">The Lantern Below (showcase)</button>
+    <label class="file-btn">Open a game file
+      <input id="filePicker" type="file" accept=".z3,.z5,.z8,.zblorb,.blorb" hidden>
+    </label>
+    <button id="restartBtn" type="button">Restart</button>
+  </div>
+</header>
+
+<div class="demo-bar">
+  <button id="demoBtn" type="button" class="demo-run">▶ Run the demo</button>
+  <button id="demoStopBtn" type="button" hidden>Stop demo</button>
+  <p id="demoCaption" class="demo-caption" aria-live="polite"></p>
+</div>
+
+<main>
+  <section class="stage">
+    <div id="statusBar" class="status-bar" aria-label="Game status">
+      <span id="statusRoom">No game loaded</span>
+      <span id="statusNums" class="status-nums"></span>
+    </div>
+
+    <!-- The game's own words. A live region: screen readers follow play,
+         and the built-in narration yields to a running system reader. -->
+    <div id="transcript" class="transcript" role="log" aria-live="polite" aria-label="Game transcript"></div>
+
+    <div class="narration-bar">
+      <button id="narrateToggle" type="button" aria-pressed="true">Narration: on</button>
+      <button id="stopTalkBtn" type="button">Stop talking</button>
+      <label class="rate">Speed
+        <input id="rateSlider" type="range" min="0.6" max="1.8" step="0.1" value="1">
+      </label>
+      <button id="largeTypeToggle" type="button" aria-pressed="false">Large type</button>
+    </div>
+
+    <div class="sayit">
+      <div class="sayit-row">
+        <button id="micBtn" type="button" class="mic">🎙 Speak</button>
+        <input id="cmdInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Say it or type it — e.g. peek through keyhole" aria-label="Your command">
+        <button id="sendBtn" type="button" class="send">Send</button>
+      </div>
+      <div id="heardAs" class="heard-as" aria-live="polite"></div>
+      <div class="fav-row">
+        <div id="favorites" class="favorites" role="group" aria-label="Your saved sentences"></div>
+        <button id="addFavBtn" type="button">☆ Save sentence</button>
+      </div>
+    </div>
+
+    <div class="big-actions">
+      <button id="saveBtn" type="button">Save</button>
+      <button id="restoreBtn" type="button">Restore</button>
+      <button id="undoBtn" type="button">Undo</button>
+      <button id="lookBtn" type="button">Look</button>
+      <button id="invBtn" type="button">Inventory</button>
+      <button id="sonarBtn" type="button">Sonar (feel the exits)</button>
+      <button id="downloadSaveBtn" type="button">Download save (.sav)</button>
+      <label class="file-btn">Load save file
+        <input id="loadSaveFile" type="file" accept=".sav,.qut,.quetzal" hidden>
+      </label>
+    </div>
+  </section>
+
+  <aside class="side">
+    <section class="panel">
+      <h2>Compass</h2>
+      <div class="compass" id="compass" role="group" aria-label="Compass">
+        <button data-dir="northwest">NW</button>
+        <button data-dir="north">N</button>
+        <button data-dir="northeast">NE</button>
+        <button data-dir="west">W</button>
+        <button data-dir="look" class="compass-look">Look</button>
+        <button data-dir="east">E</button>
+        <button data-dir="southwest">SW</button>
+        <button data-dir="south">S</button>
+        <button data-dir="southeast">SE</button>
+      </div>
+      <div class="compass-row2">
+        <button data-dir="up">Up</button>
+        <button data-dir="down">Down</button>
+        <button data-dir="in">In</button>
+        <button data-dir="out">Out</button>
+      </div>
+      <p class="hint">A direction lights when the game has shown it from here. A lit cell names where it leads once you have been there.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Here</h2>
+      <div id="hereRow" class="chips"></div>
+      <h2>Carrying</h2>
+      <div id="carryRow" class="chips"><span class="chip ghost">Tap Inventory to refresh</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Map <span class="thin">(visited rooms only)</span></h2>
+      <canvas id="fogMap" width="320" height="240" aria-label="Map of rooms you have visited"></canvas>
+      <img id="artImg" class="discovery-art" hidden alt="">
+      <p id="artStatus" class="hint"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Living map <span class="thin">(3D — visited rooms only)</span></h2>
+      <canvas id="map3d" width="680" height="560" aria-label="Three-dimensional map of rooms you have visited. Dashed stubs are exits the game's words have named but you have not walked yet."></canvas>
+    </section>
+  </aside>
+</main>
+
+<footer class="foot">
+  <p>Bundled starter game: <strong>Figaro</strong> by Victor Gijsbers — GPL v3, a licensed
+  component (see CREDITS). Bring your own .z3/.z5/.z8/.zblorb files; they are
+  played untouched. Built during the Meta Global AI Developer Hackathon, Oct 27 – Nov 4, 2026.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

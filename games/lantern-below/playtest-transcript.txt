@@ -1,0 +1,594 @@
+THE LANTERN BELOW -- headless acceptance playtestinterpreter: dfrotz (Frotz 2.55, dumb interface)story file:  lantern-below.z5 (Inform 6.44, library 6.12.8)script:      walkthrough.txt (58 commands)========================================================================Using normal formatting.
+Loading /home/hatch/workspace/goals/meta-global-ai-developer-hackathon-entry/repo/z-games/games/lantern-below/lantern-below.z5.
+ Lantern Atrium                                                          Score: 0     Moves: 0
+
+The archive-city of Veyra has gone dark, and its records with it. You are a Wayfarer: one who
+reawakens at lanterns. Somewhere below the Bell Archive sleeps the Lantern Core. Reach it. Ring
+nothing. Trust the telegraphs.
+
+The Lantern Below
+A short souls-like in the dark of Veyra
+Release 1 / Serial number 261027 / Inform v6.44 Library v6.12.8 S
+
+Lantern Atrium
+A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's
+lantern burns with a small, patient flame that has never once gone out. Passages climb north toward
+the Sunken Steps. A cracked shaft in the ceiling is sealed by an iron grate.
+
+You can see a cracked shaft here.
+
+>
+> status
+ Lantern Atrium                                                          Score: 0     Moves: 1
+
+WAYFARER
+HP 24 / 24
+Stamina 12 / 12
+Glimmer 0
+Strength +0
+Last lantern: the Lantern Atrium
+
+>
+> help
+ Lantern Atrium                                                          Score: 0     Moves: 2
+
+THE LANTERN BELOW -- how to play
+Move with compass directions (NORTH, SOUTH, EAST, WEST, UP, DOWN). LOOK and EXAMINE tell you what is
+here. TAKE and DROP handle objects; PULL works levers; READ works tablets.
+Combat is deliberate. Enemies announce (telegraph) their heavy blows one round before they land. In
+combat:
+  STRIKE (3 stamina, steady damage)
+  HEAVY STRIKE (6 stamina, heavy damage)
+  GUARD (blocks the next blow whole, restores stamina)
+  EVADE (slips the next blow whole)
+After a heavy blow, an enemy is EXPOSED for one round: strikes against it deal bonus damage -- the
+punish window. Overspend stamina and you stagger, losing the turn.
+REST at a lantern heals you, resets the dark's pieces, and lets you STRENGTHEN for glimmer. Death
+drops all your glimmer where you fell; return and TAKE GLIMMER to recover it -- die again first, and
+it is gone forever.
+STATUS always reads your HP, Stamina, Glimmer, and last lantern. REPEAT re-reads the state of the
+fight (pacing aid).
+
+>
+> look
+ Lantern Atrium                                                          Score: 0     Moves: 3
+
+Lantern Atrium
+A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's
+lantern burns with a small, patient flame that has never once gone out. Passages climb north toward
+the Sunken Steps. A cracked shaft in the ceiling is sealed by an iron grate.
+
+You can see a cracked shaft here.
+
+>
+> north
+ Sunken Steps                                                            Score: 0     Moves: 4
+
+Sunken Steps
+A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the
+walls -- this was a reading stair once, where clerks carried records down to be forgotten. The
+Flooded Stacks lie north; a Dusty Gallery opens east.
+
+You can see the Archive Thrall here.
+
+The Archive Thrall shuffles forward and rakes at you with its rusted blade.
+The Archive Thrall hits you for 3 damage. (HP 21/24, Stamina 12/12, Glimmer 0)
+
+>
+> strike
+ Sunken Steps                                                            Score: 0     Moves: 5
+
+You strike the Archive Thrall for 4 damage. (HP 21/24, Stamina 9/12, Glimmer 0)
+
+The Archive Thrall raises its rusted blade high overhead -- a crushing blow lands NEXT round. GUARD
+or EVADE.
+
+>
+> evade
+ Sunken Steps                                                            Score: 0     Moves: 6
+
+You coil, ready to slip the next blow entirely. (HP 21/24, Stamina 8/12, Glimmer 0)
+
+The Archive Thrall brings the blade down with all its weight.
+You slip sideways and the Archive Thrall's blow cuts only air. (HP 21/24, Stamina 8/12, Glimmer 0)
+
+>
+> heavy strike
+ Sunken Steps                                                            Score: 0     Moves: 7
+
+The Archive Thrall is exposed -- you punish it. You strike the Archive Thrall for 12 damage. (HP
+21/24, Stamina 2/12, Glimmer 0)
+The Archive Thrall comes apart like wet paper. +30 glimmer.
+
+>
+> east
+ Dusty Gallery                                                           Score: 0     Moves: 8
+
+Dusty Gallery
+Portraits of the archive's founders, every face scratched out with the same patient hand. A stone
+tablet leans by the west wall. Cracks web the masonry like veins.
+
+>
+> read tablet
+ Dusty Gallery                                                           Score: 0     Moves: 9
+
+THE TABLET: 'We did not lose the light. We filed it. Drawer by drawer, bell by bell, we put the
+light away where nothing could want it. If you are reading this, something wanted it.'
+
+>
+> search crack
+ Dusty Gallery                                                           Score: 0     Moves: 10
+
+Behind the crack: a miser's drawer that was never catalogued. A cache of glimmer glints in the dark.
+
+>
+> take glimmer
+ Dusty Gallery                                                           Score: 0     Moves: 11
+
+You gather the cache. +25 glimmer. (Glimmer 55)
+
+>
+> inventory
+ Dusty Gallery                                                           Score: 0     Moves: 12
+
+You're carrying nothing.
+
+>
+> west
+ Sunken Steps                                                            Score: 0     Moves: 13
+
+Sunken Steps
+A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the
+walls -- this was a reading stair once, where clerks carried records down to be forgotten. The
+Flooded Stacks lie north; a Dusty Gallery opens east.
+
+You can see the Archive Thrall here.
+
+>
+> south
+ Lantern Atrium                                                          Score: 0     Moves: 14
+
+Lantern Atrium
+A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's
+lantern burns with a small, patient flame that has never once gone out. Passages climb north toward
+the Sunken Steps. A cracked shaft in the ceiling is sealed by an iron grate.
+
+You can see a cracked shaft here.
+
+>
+> rest
+ Lantern Atrium                                                          Score: 0     Moves: 15
+
+You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 24/24, Stamina 12/12,
+Glimmer 55)
+The lantern will also strengthen you, for glimmer: STRENGTHEN HEALTH (40), STRENGTHEN STAMINA (40),
+STRENGTHEN STRENGTH (60).
+
+>
+> north
+ Sunken Steps                                                            Score: 0     Moves: 16
+
+Sunken Steps
+A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the
+walls -- this was a reading stair once, where clerks carried records down to be forgotten. The
+Flooded Stacks lie north; a Dusty Gallery opens east.
+
+You can see the Archive Thrall here.
+
+The Archive Thrall shuffles forward and rakes at you with its rusted blade.
+The Archive Thrall hits you for 3 damage. (HP 21/24, Stamina 12/12, Glimmer 55)
+
+>
+> north
+ Flooded Stacks                                                          Score: 0     Moves: 17
+
+Flooded Stacks
+Ankle-deep black water between drowned shelving. Every step sets the whole room gently sloshing, and
+the shelves answer like a harbour. North, an iron door; east, a narrow service chamber; south, the
+Sunken Steps.
+
+You can see an iron door and the Rusted Sentinel here.
+
+The Rusted Sentinel swings its halberd in a slow, professional arc.
+The Rusted Sentinel hits you for 4 damage. (HP 17/24, Stamina 12/12, Glimmer 55)
+
+>
+> attack sentinel
+ Flooded Stacks                                                          Score: 0     Moves: 18
+
+You strike the Rusted Sentinel for 4 damage. (HP 17/24, Stamina 9/12, Glimmer 55)
+
+The Rusted Sentinel swings its halberd in a slow, professional arc.
+The Rusted Sentinel hits you for 4 damage. (HP 13/24, Stamina 9/12, Glimmer 55)
+
+>
+> strike
+ Flooded Stacks                                                          Score: 0     Moves: 19
+
+You strike the Rusted Sentinel for 4 damage. (HP 13/24, Stamina 6/12, Glimmer 55)
+
+The Rusted Sentinel drags its halberd back through the water, sparks crawling up the haft -- a great
+sweep lands NEXT round. GUARD or EVADE.
+
+>
+> guard
+ Flooded Stacks                                                          Score: 0     Moves: 20
+
+You set your feet and raise your guard. (Stamina recovers.) (HP 13/24, Stamina 10/12, Glimmer 55)
+
+The Rusted Sentinel sweeps the halberd through where a person would be.
+Your guard turns the Rusted Sentinel's blow aside. No harm done. (HP 13/24, Stamina 10/12, Glimmer
+55)
+
+>
+> heavy strike
+ Flooded Stacks                                                          Score: 0     Moves: 21
+
+The Rusted Sentinel is exposed -- you punish it. You strike the Rusted Sentinel for 12 damage. (HP
+13/24, Stamina 4/12, Glimmer 55)
+
+The Rusted Sentinel's swing carries it wide, joints shrieking -- EXPOSED. Strike now.
+
+>
+> strike
+ Flooded Stacks                                                          Score: 0     Moves: 22
+
+You strike the Rusted Sentinel for 4 damage. (HP 13/24, Stamina 1/12, Glimmer 55)
+The Rusted Sentinel comes apart like wet paper. +50 glimmer.
+
+>
+> east
+ Lever Chamber                                                           Score: 0     Moves: 23
+
+Lever Chamber
+A service room of pipes and one honest lever, in a house of dishonest machinery. The pipes run
+north, toward the iron door.
+
+>
+> pull lever
+ Lever Chamber                                                           Score: 0     Moves: 24
+
+The lever goes over with a clang that walks through the pipes and comes back as a sigh. Somewhere
+north, the iron door unlocks.
+
+>
+> west
+ Flooded Stacks                                                          Score: 0     Moves: 25
+
+Flooded Stacks
+Ankle-deep black water between drowned shelving. Every step sets the whole room gently sloshing, and
+the shelves answer like a harbour. North, an iron door; east, a narrow service chamber; south, the
+Sunken Steps.
+
+You can see an iron door and the Rusted Sentinel here.
+
+>
+> open iron door
+ Flooded Stacks                                                          Score: 0     Moves: 26
+
+You open the iron door.
+
+>
+> north
+ Bell Approach                                                           Score: 0     Moves: 27
+
+Bell Approach
+A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive
+waits north. In the floor, the cracked shaft drops toward the Lantern Atrium -- its grate bars this
+side only, and you are on the right side of it.
+
+You can see a cracked shaft and an iron door here.
+
+>
+> open shaft
+ Bell Approach                                                           Score: 0     Moves: 28
+
+You haul the bar aside from this side. The shaft stands open -- a short way down to the Atrium, from
+now on.
+You open the cracked shaft.
+
+>
+> down
+ Lantern Atrium                                                          Score: 0     Moves: 29
+
+Lantern Atrium
+A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's
+lantern burns with a small, patient flame that has never once gone out. Passages climb north toward
+the Sunken Steps. A cracked shaft in the ceiling is sealed by an iron grate.
+
+You can see a cracked shaft here.
+
+>
+> up
+ Bell Approach                                                           Score: 0     Moves: 30
+
+Bell Approach
+A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive
+waits north. In the floor, the cracked shaft drops toward the Lantern Atrium -- its grate bars this
+side only, and you are on the right side of it.
+
+You can see a cracked shaft and an iron door here.
+
+>
+> strengthen health
+ Bell Approach                                                           Score: 0     Moves: 31
+
+Warmth settles in your chest. Maximum HP is now 28. (Rest to fill it.)
+
+>
+> rest
+ Bell Approach                                                           Score: 0     Moves: 32
+
+You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 28/28, Stamina 12/12,
+Glimmer 65)
+The lantern will also strengthen you, for glimmer: STRENGTHEN HEALTH (40), STRENGTHEN STAMINA (40),
+STRENGTHEN STRENGTH (60).
+
+>
+> north
+ Bell Archive                                                            Score: 0     Moves: 33
+
+Bell Archive
+The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead
+of books -- every bell a record, every record a thing that was rung once and answered. South returns
+to the Approach.
+
+You can see the Bell Warden here.
+
+The Bell Warden swings the bell-hammer in a wide, unhurried arc.
+The Bell Warden hits you for 5 damage. (HP 23/28, Stamina 12/12, Glimmer 65)
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 34
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 12/12,
+Glimmer 65)
+
+The Bell Warden raises the bell-hammer to its full height, and every small bell in the room leans
+away -- the SLAM lands NEXT round. GUARD or EVADE.
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 35
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 12/12,
+Glimmer 65)
+
+The bell-hammer comes down like the end of a word.
+The Bell Warden hits you for 11 damage. (HP 12/28, Stamina 12/12, Glimmer 65)
+
+>
+> repeat
+ Bell Archive                                                            Score: 0     Moves: 36
+
+The fight, as it stands: the Bell Warden has 36 of 36 HP left. It is EXPOSED: strike now for bonus
+damage. (HP 12/28, Stamina 12/12, Glimmer 65)
+
+The Bell Warden sways, bell-hammer buried in the floor -- EXPOSED. Punish it.
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 37
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 12/28, Stamina 12/12,
+Glimmer 65)
+
+The Bell Warden rings a handbell twice, light and quick -- a FLURRY lands NEXT round.
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 38
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 12/28, Stamina 12/12,
+Glimmer 65)
+
+The bell-hammer flickers, near as fast as thought.
+The Bell Warden hits you for 4 damage. (HP 8/28, Stamina 12/12, Glimmer 65)
+The Bell Warden hits you for 4 damage. (HP 4/28, Stamina 12/12, Glimmer 65)
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 39
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 4/28, Stamina 12/12,
+Glimmer 65)
+
+The Bell Warden's shoulders drop, breath sawing -- EXPOSED. Punish it.
+
+>
+> wait
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 4/28, Stamina 12/12,
+Glimmer 65)
+
+The Bell Warden swings the bell-hammer in a wide, unhurried arc.
+The Bell Warden hits you for 5 damage. (HP -1/28, Stamina 12/12, Glimmer 65)
+
+The dark takes you.
+
+YOU DIED
+Your glimmer spills across the stones where you fell: 65 glimmer, waiting -- if you can return for
+it.
+
+You wake beneath the lantern's light, whole and empty-handed.
+
+Bell Approach
+A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive
+waits north. In the floor, the cracked shaft drops toward the Lantern Atrium -- its grate bars this
+side only, and you are on the right side of it.
+
+You can see a cracked shaft and an iron door here.
+***MORE***
+> status
+ Bell Approach                                                           Score: 0     Moves: 40
+
+>
+> north
+ Bell Archive                                                            Score: 0     Moves: 41
+
+Bell Archive
+The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead
+of books -- every bell a record, every record a thing that was rung once and answered. South returns
+to the Approach.
+
+You can see your your fallen glimmer and the Bell Warden here.
+
+The Bell Warden raises the bell-hammer to its full height, and every small bell in the room leans
+away -- the SLAM lands NEXT round. GUARD or EVADE.
+
+>
+> take glimmer
+ Bell Archive                                                            Score: 0     Moves: 42
+
+You gather yourself back up. +65 glimmer recovered. (Glimmer 65)
+
+The bell-hammer comes down like the end of a word.
+The Bell Warden hits you for 11 damage. (HP 17/28, Stamina 12/12, Glimmer 65)
+
+>
+> south
+ Bell Approach                                                           Score: 0     Moves: 43
+
+Bell Approach
+A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive
+waits north. In the floor, the cracked shaft drops toward the Lantern Atrium -- its grate bars this
+side only, and you are on the right side of it.
+
+You can see a cracked shaft and an iron door here.
+
+>
+> rest
+ Bell Approach                                                           Score: 0     Moves: 44
+
+You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 28/28, Stamina 12/12,
+Glimmer 65)
+The lantern will also strengthen you, for glimmer: STRENGTHEN HEALTH (40), STRENGTHEN STAMINA (40),
+STRENGTHEN STRENGTH (60).
+
+>
+> north
+ Bell Archive                                                            Score: 0     Moves: 45
+
+Bell Archive
+The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead
+of books -- every bell a record, every record a thing that was rung once and answered. South returns
+to the Approach.
+
+You can see the Bell Warden here.
+
+The Bell Warden swings the bell-hammer in a wide, unhurried arc.
+The Bell Warden hits you for 5 damage. (HP 23/28, Stamina 12/12, Glimmer 65)
+
+>
+> strike
+ Bell Archive                                                            Score: 0     Moves: 46
+
+You strike the Bell Warden for 4 damage. (HP 23/28, Stamina 9/12, Glimmer 65)
+
+The Bell Warden raises the bell-hammer to its full height, and every small bell in the room leans
+away -- the SLAM lands NEXT round. GUARD or EVADE.
+
+>
+> guard
+ Bell Archive                                                            Score: 0     Moves: 47
+
+You set your feet and raise your guard. (Stamina recovers.) (HP 23/28, Stamina 12/12, Glimmer 65)
+
+The bell-hammer comes down like the end of a word.
+Your guard turns the Bell Warden's blow aside. No harm done. (HP 23/28, Stamina 12/12, Glimmer 65)
+
+>
+> heavy strike
+ Bell Archive                                                            Score: 0     Moves: 48
+
+The Bell Warden is exposed -- you punish it. You strike the Bell Warden for 12 damage. (HP 23/28,
+Stamina 6/12, Glimmer 65)
+
+The Bell Warden sways, bell-hammer buried in the floor -- EXPOSED. Punish it.
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 49
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 9/12,
+Glimmer 65)
+
+The Bell Warden rings a handbell twice, light and quick -- a FLURRY lands NEXT round.
+
+>
+> guard
+ Bell Archive                                                            Score: 0     Moves: 50
+
+You set your feet and raise your guard. (Stamina recovers.) (HP 23/28, Stamina 12/12, Glimmer 65)
+
+The bell-hammer flickers, near as fast as thought.
+Your guard turns the Bell Warden's blow aside. No harm done. (HP 23/28, Stamina 12/12, Glimmer 65)
+Your guard turns the Bell Warden's blow aside. No harm done. (HP 23/28, Stamina 12/12, Glimmer 65)
+
+>
+> heavy strike
+ Bell Archive                                                            Score: 0     Moves: 51
+
+The Bell Warden is exposed -- you punish it. You strike the Bell Warden for 12 damage. (HP 23/28,
+Stamina 6/12, Glimmer 65)
+
+Deep in the shelves, the great bell begins to toll -- faster now, and hungry. The Warden's blows
+will shake the stamina from your hands.
+
+>
+> strike
+ Bell Archive                                                            Score: 0     Moves: 52
+
+You strike the Bell Warden for 4 damage. (HP 23/28, Stamina 3/12, Glimmer 65)
+
+The Bell Warden swings the bell-hammer, and the tolling runs up your arms.
+The Bell Warden hits you for 5 damage. (HP 18/28, Stamina 3/12, Glimmer 65)
+The tolling shakes your grip. (-2 Stamina)
+
+>
+> wait
+ Bell Archive                                                            Score: 0     Moves: 53
+
+You hold your ground and catch your breath, eyes on the Bell Warden. (HP 18/28, Stamina 4/12,
+Glimmer 65)
+
+The bell-hammer rises to its full height -- the SLAM lands NEXT round. GUARD or EVADE.
+
+>
+> guard
+ Bell Archive                                                            Score: 0     Moves: 54
+
+You set your feet and raise your guard. (Stamina recovers.) (HP 18/28, Stamina 8/12, Glimmer 65)
+
+The bell-hammer comes down like a verdict.
+Your guard turns the Bell Warden's blow aside. No harm done. (HP 18/28, Stamina 8/12, Glimmer 65)
+
+>
+> strike
+ Bell Archive                                                            Score: 0     Moves: 55
+
+You strike the Bell Warden for 4 damage. (HP 18/28, Stamina 5/12, Glimmer 65)
+The Bell Warden comes apart like wet paper. +120 glimmer.
+
+Something bright settles in the settling dust: the LANTERN CORE.
+
+>
+> take core
+ Bell Archive                                                            Score: 0     Moves: 56
+
+You lift the Lantern Core, and the dark of Veyra -- drawer by drawer, bell by bell -- begins,
+quietly, to give the light back.
+
+THE LANTERN BELOW IS LIT.
+You recovered the Lantern Core and defeated the Bell Warden. Veyra will keep its records in the
+light from now on.
+Taken.
+
+    *** You have won ***
+
+In that game you scored 0 out of a possible 0, in 56 turns.
+
+Would you like to RESTART, RESTORE a saved game, see some suggestions for AMUSING things to do or
+QUIT?
+>
+> quit

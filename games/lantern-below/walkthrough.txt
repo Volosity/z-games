@@ -1,0 +1,75 @@
+# The Lantern Below -- scripted acceptance walkthrough.
+# One command per line; # lines are commentary for the transcript reader.
+# Covers the whole loop: explore, both enemies (telegraph + punish),
+# glimmer cache, rest, transit, lever door, shortcut, strengthen,
+# a death with glimmer drop, respawn, recovery, the Warden kill, victory.
+status
+help
+look
+# -- Sunken Steps: the Archive Thrall (entry rake lands on arrival)
+north
+strike
+evade
+heavy strike
+# -- Dusty Gallery: lore and the glimmer cache
+east
+read tablet
+search crack
+take glimmer
+inventory
+west
+south
+# -- Rest at the Atrium lantern (heals; the Thrall resets)
+rest
+# -- Transit north again (Thrall rakes once on the Steps)
+north
+north
+# -- Flooded Stacks: the Rusted Sentinel
+attack sentinel
+strike
+guard
+heavy strike
+strike
+# -- Lever Chamber: free the iron door
+east
+pull lever
+west
+open iron door
+north
+# -- Bell Approach: the shortcut shaft, opened from the far side
+open shaft
+down
+up
+# -- Strengthen, then rest (respawn point moves to the Approach)
+strengthen health
+rest
+# -- First Warden attempt: stand and take it. Death, and the drop.
+north
+wait
+wait
+repeat
+wait
+wait
+wait
+wait
+status
+# -- Recover the fallen glimmer, then get out
+north
+take glimmer
+south
+rest
+# -- The real fight: punish the windows, guard the tolls
+north
+strike
+guard
+heavy strike
+wait
+guard
+heavy strike
+strike
+wait
+guard
+strike
+# -- The Lantern Core
+take core
+quit

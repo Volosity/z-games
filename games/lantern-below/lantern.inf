@@ -1,0 +1,825 @@
+! =====================================================================
+! THE LANTERN BELOW
+! An original game written for Galileo / Z-Games during the Meta Global
+! AI Developer Hackathon (Oct 27 - Nov 4, 2026). Souls-like text RPG:
+! stamina combat, telegraphed enemies, death drops its currency where
+! you fell. Inform 6, standard library 6.12. Compiles to a .z5.
+!
+! Design contract (from the filed spec, 2026-10-27):
+!   HP / Stamina / Glimmer; REST at a Lantern heals, resets enemies,
+!   and is where STRENGTHEN is bought. Death drops all Glimmer where
+!   you fell; respawn at the last Lantern; a second death unrecovered
+!   loses the drop. Combat is deterministic: enemies run fixed
+!   telegraph patterns, so a careful player can learn them exactly.
+! =====================================================================
+
+Constant Story "The Lantern Below";
+Constant Headline "^A short souls-like in the dark of Veyra^";
+Constant AMUSING_PROVIDED;
+Constant MAX_CARRIED = 20;
+
+Replace HelpSub;
+Replace WaitSub;
+
+Include "parser.h";
+Include "verblib.h";
+
+! ---------------------------------------------------------------------
+! Globals: the Wayfarer's few stat points.
+! ---------------------------------------------------------------------
+Global player_hp = 24;
+Global player_maxhp = 24;
+Global player_stam = 12;
+Global player_maxstam = 12;
+Global player_strength = 0;      ! +1 strike damage per point bought
+Global glimmer = 0;
+Global drop_amount = 0;          ! glimmer in the fallen_glimmer drop
+Global cache_revealed = 0;       ! the gallery cache: found once, ever
+Global guarding = 0;             ! set by GUARD, consumed by enemy turn
+Global evading = 0;              ! set by EVADE, consumed by enemy turn
+Global last_lantern_room;        ! room object of the last Lantern rested at
+Global last_lantern_name;        ! its printed name, for STATUS
+Global pacing = 0;               ! pacing aid: REPEAT re-reads the fight state
+
+! ---------------------------------------------------------------------
+! Small helpers
+! ---------------------------------------------------------------------
+[ ClampStam;
+    if (player_stam > player_maxstam) player_stam = player_maxstam;
+    if (player_stam < 0) player_stam = 0;
+];
+
+[ StatsEcho;
+    print " (HP ", player_hp, "/", player_maxhp,
+          ", Stamina ", player_stam, "/", player_maxstam,
+          ", Glimmer ", glimmer, ")";
+];
+
+[ EnemyHere   foe;
+    objectloop (foe ofclass KEnemy) {
+        if (foe.e_alive && parent(foe) == location) return foe;
+    }
+    return nothing;
+];
+
+[ AnyLanternHere   o;
+    objectloop (o ofclass KLantern) if (parent(o) == location) return o;
+    return nothing;
+];
+
+! ---------------------------------------------------------------------
+! Damage to the player, honouring GUARD / EVADE. who = enemy object.
+! Returns true if the player died (death fully handled inside).
+! ---------------------------------------------------------------------
+[ EnemyHit who dmg    actual;
+    actual = dmg;
+    if (guarding) {
+        print "Your guard turns ", (the) who, "'s blow aside. No harm done.";
+        actual = 0;
+    } else if (evading) {
+        print "You slip sideways and ", (the) who, "'s blow cuts only air.";
+        actual = 0;
+    }
+    if (actual > 0) {
+        player_hp = player_hp - actual;
+        print (The) who, " hits you for ", actual, " damage.";
+    }
+    StatsEcho(); new_line;
+    if (player_hp <= 0) { PlayerDies(who); return true; }
+    return false;
+];
+
+[ PlayerDies who    drop;
+    print "^The dark takes you.^^";
+    print "YOU DIED^";
+    drop = fallen_glimmer;
+    if (drop_amount > 0 && parent(drop) ~= nothing) {
+        print "Somewhere in the dark, your earlier fallen glimmer gutters
+               out, unrecovered and lost forever.^";
+    }
+    if (glimmer > 0) {
+        drop_amount = glimmer;
+        move drop to location;
+        print "Your glimmer spills across the stones where you fell: ",
+              glimmer, " glimmer, waiting -- if you can return for it.^";
+        glimmer = 0;
+    } else {
+        drop_amount = 0;
+        remove drop;
+    }
+    ResetAllEnemies();
+    player_hp = player_maxhp;
+    player_stam = player_maxstam;
+    print "^You wake beneath the lantern's light, whole and empty-handed.^";
+    PlayerTo(last_lantern_room);
+];
+
+[ ResetAllEnemies   foe;
+    objectloop (foe ofclass KEnemy) {
+        foe.e_hp = foe.e_maxhp;
+        foe.e_state = 0;
+        foe.e_beat = 0;
+        foe.e_alive = 1;
+        foe.e_phase2 = 0;
+    }
+];
+
+! ---------------------------------------------------------------------
+! Player combat actions. foe = the living enemy here, or nothing.
+! ---------------------------------------------------------------------
+[ DoStrike heavy    foe cost dmg;
+    foe = EnemyHere();
+    if (foe == nothing) {
+        print "There is nothing here to strike.^";
+        return;
+    }
+    if (heavy) cost = 6; else cost = 3;
+    if (player_stam < cost) {
+        print "You swing on empty lungs and stagger, wide open. (Staggered:
+               your stamina recovers a little, but the turn is lost.)^";
+        player_stam = player_stam + 4; ClampStam();
+        return;
+    }
+    player_stam = player_stam - cost;
+    if (heavy) dmg = 8 + player_strength; else dmg = 4 + player_strength;
+    if (foe.e_beat == FOE_RECOVER) {
+        ! Punish window: the enemy is exposed after its big attack.
+        if (heavy) dmg = dmg + 4; else dmg = dmg + 3;
+        print "The ", (name) foe, " is exposed -- you punish it. ";
+    }
+    foe.e_hp = foe.e_hp - dmg;
+    print "You strike the ", (name) foe, " for ", dmg, " damage.";
+    StatsEcho(); new_line;
+    if (foe.e_hp <= 0) EnemyDies(foe);
+];
+
+[ EnemyDies foe;
+    foe.e_alive = 0;
+    print "The ", (name) foe, " comes apart like wet paper. +",
+          foe.e_glim, " glimmer.^";
+    glimmer = glimmer + foe.e_glim;
+    if (foe == bell_warden) {
+        move lantern_core to bell_archive;
+        print "^Something bright settles in the settling dust: the
+               LANTERN CORE.^";
+    }
+];
+
+[ GuardSub;
+    guarding = 1;
+    player_stam = player_stam + 4; ClampStam();
+    if (EnemyHere() == nothing)
+        print "You raise your guard, though nothing threatens you here.^";
+    else
+        print "You set your feet and raise your guard. (Stamina recovers.)";
+    StatsEcho(); new_line;
+];
+
+[ EvadeSub;
+    if (player_stam < 1 && EnemyHere() ~= nothing) {
+        print "Too winded to move -- you stagger in place. (Staggered.)^";
+        player_stam = player_stam + 4; ClampStam();
+        return;
+    }
+    evading = 1;
+    player_stam = player_stam - 1; ClampStam();
+    if (EnemyHere() == nothing)
+        print "You step aside from nothing in particular.^";
+    else
+        print "You coil, ready to slip the next blow entirely.";
+    StatsEcho(); new_line;
+];
+
+[ StrikeSub; DoStrike(0); ];
+[ HeavyStrikeSub; DoStrike(1); ];
+[ KillSub; DoStrike(0); ];   ! the library ATTACK/KILL words land here too
+
+! ---------------------------------------------------------------------
+! Lantern verbs: REST, STRENGTHEN, STATUS, and friends.
+! ---------------------------------------------------------------------
+[ RestSub    lan;
+    lan = AnyLanternHere();
+    if (lan == nothing) {
+        print "No lantern burns here. Rest is a lantern's gift.^";
+        return;
+    }
+    player_hp = player_maxhp;
+    player_stam = player_maxstam;
+    ResetAllEnemies();
+    last_lantern_room = location;
+    last_lantern_name = lan.lantern_name;
+    print "You rest in the lantern light. Wounds close; the dark resets
+           its pieces.";
+    StatsEcho(); new_line;
+    print "The lantern will also strengthen you, for glimmer:
+           STRENGTHEN HEALTH (40), STRENGTHEN STAMINA (40),
+           STRENGTHEN STRENGTH (60).^";
+];
+
+[ Strengthen what    cost;
+    if (AnyLanternHere() == nothing) {
+        print "Strengthening is a lantern's work. Find one first.^";
+        return;
+    }
+    if (what == 1) cost = 40; else if (what == 2) cost = 40; else cost = 60;
+    if (glimmer < cost) {
+        print "The lantern dims: ", cost, " glimmer is the price, and you
+               carry ", glimmer, ".^";
+        return;
+    }
+    glimmer = glimmer - cost;
+    if (what == 1) {
+        player_maxhp = player_maxhp + 4;
+        print "Warmth settles in your chest. Maximum HP is now ",
+              player_maxhp, ". (Rest to fill it.)^";
+    } else if (what == 2) {
+        player_maxstam = player_maxstam + 3;
+        print "Your breath comes slower and deeper. Maximum Stamina is
+               now ", player_maxstam, ".^";
+    } else {
+        player_strength = player_strength + 1;
+        print "Your arms remember an older strength. Strike damage +1
+               (now +", player_strength, ").^";
+    }
+];
+
+[ StrengthenHealthSub; Strengthen(1); ];
+[ StrengthenStaminaSub; Strengthen(2); ];
+[ StrengthenStrengthSub; Strengthen(3); ];
+
+[ StatusSub;
+    print "WAYFARER^";
+    print "HP ", player_hp, " / ", player_maxhp, "^";
+    print "Stamina ", player_stam, " / ", player_maxstam, "^";
+    print "Glimmer ", glimmer, "^";
+    print "Strength +", player_strength, "^";
+    print "Last lantern: ", (string) last_lantern_name, "^";
+    if (drop_amount > 0 && parent(fallen_glimmer) ~= nothing)
+        print "Fallen glimmer waiting: ", drop_amount, "^";
+];
+
+[ HelpSub;
+    print "THE LANTERN BELOW -- how to play^";
+    print "Move with compass directions (NORTH, SOUTH, EAST, WEST, UP,
+           DOWN). LOOK and EXAMINE tell you what is here. TAKE and DROP
+           handle objects; PULL works levers; READ works tablets.^";
+    print "Combat is deliberate. Enemies announce (telegraph) their heavy
+           blows one round before they land. In combat:^";
+    print "  STRIKE (3 stamina, steady damage)^";
+    print "  HEAVY STRIKE (6 stamina, heavy damage)^";
+    print "  GUARD (blocks the next blow whole, restores stamina)^";
+    print "  EVADE (slips the next blow whole)^";
+    print "After a heavy blow, an enemy is EXPOSED for one round: strikes
+           against it deal bonus damage -- the punish window. Overspend
+           stamina and you stagger, losing the turn.^";
+    print "REST at a lantern heals you, resets the dark's pieces, and lets
+           you STRENGTHEN for glimmer. Death drops all your glimmer where
+           you fell; return and TAKE GLIMMER to recover it -- die again
+           first, and it is gone forever.^";
+    print "STATUS always reads your HP, Stamina, Glimmer, and last
+           lantern. REPEAT re-reads the state of the fight (pacing aid).^";
+];
+
+[ WaitSub    foe;
+    foe = EnemyHere();
+    if (foe ~= nothing) {
+        player_stam = player_stam + 3; ClampStam();
+        print "You hold your ground and catch your breath, eyes on the ",
+              (name) foe, ".";
+        StatsEcho(); new_line;
+    } else {
+        print "Time passes.^";
+    }
+];
+
+[ RepeatSub    foe;
+    foe = EnemyHere();
+    if (foe == nothing) {
+        print "No fight is joined here. You are in ", (name) location, ".";
+        StatsEcho(); new_line;
+        return;
+    }
+    print "The fight, as it stands: the ", (name) foe, " has ",
+          foe.e_hp, " of ", foe.e_maxhp, " HP left.";
+    if (foe.e_beat == FOE_TELEGRAPH)
+        print " It has telegraphed a heavy blow -- it lands THIS round.
+               GUARD or EVADE.";
+    if (foe.e_beat == FOE_RECOVER)
+        print " It is EXPOSED: strike now for bonus damage.";
+    StatsEcho(); new_line;
+];
+
+! ---------------------------------------------------------------------
+! Enemy turn engine. States shared by every pattern:
+!   FOE_NORMAL    a plain attack this round
+!   FOE_TELEGRAPH no attack; the heavy blow is announced, lands next round
+!   FOE_HEAVY     the telegraphed blow lands
+!   FOE_RECOVER   no attack; strikes against it deal bonus damage
+! Each enemy's turn_rule maps its own e_state index onto these beats.
+! ---------------------------------------------------------------------
+Constant FOE_NORMAL = 0;
+Constant FOE_TELEGRAPH = 1;
+Constant FOE_HEAVY = 2;
+Constant FOE_RECOVER = 3;
+
+Class KEnemy
+  with e_hp 10,
+       e_maxhp 10,
+       e_state 0,
+       e_beat 0,     ! semantic beat of the state the player acts against
+       e_alive 1,
+       e_glim 0,
+       e_phase2 0,
+       turn_rule [; ],
+       before [;
+           Attack, Kill: DoStrike(0); rtrue;
+       ],
+  has animate;
+
+Class KLantern
+  with lantern_name "an unnamed lantern",
+  has static;
+
+! The combat daemon: after the player's action each turn, the enemy
+! here takes its beat. Also clears one-round guard/evade flags.
+Object CombatDaemon "combat daemon"
+  with daemon [   foe;
+      foe = EnemyHere();
+      if (foe ~= nothing) foe.turn_rule();
+      guarding = 0; evading = 0;
+  ];
+
+[ Initialise;
+    location = lantern_atrium;
+    last_lantern_room = lantern_atrium;
+    last_lantern_name = "the Lantern Atrium";
+    StartDaemon(CombatDaemon);
+    print "^The archive-city of Veyra has gone dark, and its records with
+           it. You are a Wayfarer: one who reawakens at lanterns. Somewhere
+           below the Bell Archive sleeps the Lantern Core. Reach it. Ring
+           nothing. Trust the telegraphs.^^";
+];
+
+Include "grammar.h";
+
+! =====================================================================
+! THE WORLD OF VEYRA
+! =====================================================================
+
+! ---------------------------------------------------------------------
+! Lantern Atrium -- the hub.
+! ---------------------------------------------------------------------
+Object lantern_atrium "Lantern Atrium"
+  with description
+       "A round chamber of cold, well-fitted stone, older than the city
+        above it. In the centre a wayfarer's lantern burns with a small,
+        patient flame that has never once gone out. Passages climb north
+        toward the Sunken Steps. A cracked shaft in the ceiling is sealed
+        by an iron grate.",
+       n_to sunken_steps,
+       u_to shaft_grate,
+  has light;
+
+Object atrium_lantern "wayfarer's lantern" lantern_atrium
+  class KLantern
+  with name 'wayfarer' 'lantern' 'flame',
+       lantern_name "the Lantern Atrium",
+       description
+       "A lantern of black iron and old glass. Its flame leans toward you
+        as you near, the way plants lean toward weather. REST here to be
+        made whole; STRENGTHEN here to be made more.",
+  has scenery;
+
+! ---------------------------------------------------------------------
+! Sunken Steps -- the Thrall's ground.
+! ---------------------------------------------------------------------
+Object sunken_steps "Sunken Steps"
+  with description
+       "A broad stair drowned in its own dust, descending out of the
+        Atrium's light. Shelf-husks line the walls -- this was a reading
+        stair once, where clerks carried records down to be forgotten.
+        The Flooded Stacks lie north; a Dusty Gallery opens east.",
+       s_to lantern_atrium,
+       n_to flooded_stacks,
+       e_to dusty_gallery,
+  has light;
+
+Object archive_thrall "Archive Thrall" sunken_steps
+  class KEnemy
+  with name 'archive' 'thrall',
+       article "the",
+       e_hp 14, e_maxhp 14, e_glim 30,
+       description [;
+           if (self.e_alive)
+               print "A clerk-shaped thing in rotted archive grey, still
+                      shelving the dark. Its rusted blade was a
+                      letter-opener once, for very large letters.";
+           else
+               print "The Archive Thrall's remains, already gathering
+                      dust in the shape of a filing system.";
+       ],
+       turn_rule [;
+           switch (self.e_state) {
+           0:  print "^The Archive Thrall shuffles forward and rakes at
+                      you with its rusted blade.^";
+               EnemyHit(self, 3);
+               self.e_state = 1; self.e_beat = FOE_TELEGRAPH;
+           1:  print "^The Archive Thrall raises its rusted blade high
+                      overhead -- a crushing blow lands NEXT round.
+                      GUARD or EVADE.^";
+               self.e_state = 2; self.e_beat = FOE_HEAVY;
+           2:  print "^The Archive Thrall brings the blade down with all
+                      its weight.^";
+               EnemyHit(self, 7);
+               self.e_state = 3; self.e_beat = FOE_RECOVER;
+           3:  print "^The Archive Thrall staggers, off-balance and
+                      EXPOSED. Strike now for bonus damage.^";
+               self.e_state = 0; self.e_beat = FOE_NORMAL;
+           }
+       ],
+  has animate;
+
+! ---------------------------------------------------------------------
+! Dusty Gallery -- lore and a glimmer cache.
+! ---------------------------------------------------------------------
+Object dusty_gallery "Dusty Gallery"
+  with description
+       "Portraits of the archive's founders, every face scratched out
+        with the same patient hand. A stone tablet leans by the west
+        wall. Cracks web the masonry like veins.",
+       w_to sunken_steps,
+  has light;
+
+Object lore_tablet "stone tablet" dusty_gallery
+  with name 'stone' 'tablet',
+       description "Weathered letters, still legible if you lean close.
+                    READ it.",
+       before [;
+           Examine:
+               print "THE TABLET: 'We did not lose the light. We filed it.
+                      Drawer by drawer, bell by bell, we put the light
+                      away where nothing could want it. If you are reading
+                      this, something wanted it.'^";
+               rtrue;
+       ],
+  has scenery;
+
+Object masonry_crack "cracked masonry" dusty_gallery
+  with name 'crack' 'cracked' 'masonry',
+       description "A crack wide enough for fingers. Something in it
+                    catches lantern-light and gives it back doubled.",
+       before [;
+           Search, Examine:
+               if (cache_revealed == 0) {
+                   cache_revealed = 1;
+                   move glimmer_cache to dusty_gallery;
+                   print "Behind the crack: a miser's drawer that was
+                          never catalogued. A cache of glimmer glints in
+                          the dark.^";
+               } else {
+                   print "The crack holds nothing more.^";
+               }
+               rtrue;
+       ],
+  has scenery;
+
+Object glimmer_cache "cache of glimmer"
+  with name 'cache' 'glimmer',
+       description "A drift of pale sparks, like frost that remembers
+                    being fireflies.",
+       before [;
+           Take:
+               glimmer = glimmer + 25;
+               remove self;
+               print "You gather the cache. +25 glimmer. (Glimmer ",
+                     glimmer, ")^";
+               rtrue;
+       ];
+
+! ---------------------------------------------------------------------
+! Flooded Stacks -- the Sentinel's ground.
+! ---------------------------------------------------------------------
+Object flooded_stacks "Flooded Stacks"
+  with description
+       "Ankle-deep black water between drowned shelving. Every step sets
+        the whole room gently sloshing, and the shelves answer like a
+        harbour. North, an iron door; east, a narrow service chamber;
+        south, the Sunken Steps.",
+       s_to sunken_steps,
+       e_to lever_chamber,
+       n_to iron_door,
+  has light;
+
+Object rusted_sentinel "Rusted Sentinel" flooded_stacks
+  class KEnemy
+  with name 'rusted' 'sentinel',
+       article "the",
+       e_hp 22, e_maxhp 22, e_glim 50,
+       description [;
+           if (self.e_alive)
+               print "A harbour-chain golem of the old archive, built to
+                      keep readers out of the deep stacks. Its halberd
+                      is a shelving-prop grown teeth. It does not hate
+                      you. That is worse.";
+           else
+               print "The Rusted Sentinel stands down at last, halberd
+                      lowered, rust weeping into the black water.";
+       ],
+       turn_rule [;
+           switch (self.e_state) {
+           0:  print "^The Rusted Sentinel swings its halberd in a slow,
+                      professional arc.^";
+               EnemyHit(self, 4);
+               self.e_state = 1; self.e_beat = FOE_NORMAL;
+           1:  print "^The Rusted Sentinel swings its halberd in a slow,
+                      professional arc.^";
+               EnemyHit(self, 4);
+               self.e_state = 2; self.e_beat = FOE_TELEGRAPH;
+           2:  print "^The Rusted Sentinel drags its halberd back through
+                      the water, sparks crawling up the haft -- a great
+                      sweep lands NEXT round. GUARD or EVADE.^";
+               self.e_state = 3; self.e_beat = FOE_HEAVY;
+           3:  print "^The Rusted Sentinel sweeps the halberd through
+                      where a person would be.^";
+               EnemyHit(self, 9);
+               self.e_state = 4; self.e_beat = FOE_RECOVER;
+           4:  print "^The Rusted Sentinel's swing carries it wide,
+                      joints shrieking -- EXPOSED. Strike now.^";
+               self.e_state = 0; self.e_beat = FOE_NORMAL;
+           }
+       ],
+  has animate;
+
+! ---------------------------------------------------------------------
+! Lever Chamber and the iron door.
+! ---------------------------------------------------------------------
+Object lever_chamber "Lever Chamber"
+  with description
+       "A service room of pipes and one honest lever, in a house of
+        dishonest machinery. The pipes run north, toward the iron door.",
+       w_to flooded_stacks,
+  has light;
+
+Object door_lever "brass lever" lever_chamber
+  with name 'brass' 'lever',
+       description "A lever with a handle polished by generations of
+                    frightened hands.",
+       before [;
+           Pull, Push, Turn:
+               if (iron_door has locked) {
+                   give iron_door ~locked;
+                   print "The lever goes over with a clang that walks
+                          through the pipes and comes back as a sigh.
+                          Somewhere north, the iron door unlocks.^";
+               } else {
+                   print "The lever is already over. The iron door stands
+                          unlocked.^";
+               }
+               rtrue;
+       ],
+  has scenery;
+
+Object iron_door "iron door"
+  with name 'iron' 'door',
+       description "Iron over oak over iron, banded like a secret.",
+       door_to [;
+           if (location == flooded_stacks) return bell_approach;
+           return flooded_stacks;
+       ],
+       door_dir [;
+           if (location == flooded_stacks) return n_to;
+           return s_to;
+       ],
+       found_in flooded_stacks bell_approach,
+  has door openable locked;
+
+! ---------------------------------------------------------------------
+! Bell Approach -- the second lantern, and the shortcut shaft.
+! ---------------------------------------------------------------------
+Object bell_approach "Bell Approach"
+  with description
+       "A gallery hung with small, careful bells, each labelled with the
+        name of a silence. The Bell Archive waits north. In the floor,
+        the cracked shaft drops toward the Lantern Atrium -- its grate
+        bars this side only, and you are on the right side of it.",
+       s_to iron_door,
+       n_to bell_archive,
+       d_to shaft_grate,
+  has light;
+
+Object approach_lantern "wayfarer's lantern" bell_approach
+  class KLantern
+  with name 'wayfarer' 'lantern' 'flame',
+       lantern_name "the Bell Approach",
+       description
+       "A second lantern, lit from the first by a road nobody remembers
+        walking. REST here before the Archive. The dark beyond the door
+        is the patient kind.",
+  has scenery;
+
+Object shaft_grate "cracked shaft"
+  with name 'cracked' 'shaft' 'grate',
+       description "A shaft bored by water and finished by hands,
+                    dropping straight to the Lantern Atrium. Its grate
+                    is barred from the Approach side.",
+       door_to [;
+           if (location == bell_approach) return lantern_atrium;
+           return bell_approach;
+       ],
+       door_dir [;
+           if (location == bell_approach) return d_to;
+           return u_to;
+       ],
+       found_in bell_approach lantern_atrium,
+       before [;
+           Open, Unlock:
+               if (self has locked) {
+                   if (location == bell_approach) {
+                       give self ~locked;
+                       print "You haul the bar aside from this side.
+                              The shaft stands open -- a short way down
+                              to the Atrium, from now on.^";
+                   } else {
+                       print "The grate is barred from the far side.
+                              Whatever sealed Veyra in meant it.^";
+                       rtrue;
+                   }
+               }
+       ],
+  has door openable locked;
+
+! ---------------------------------------------------------------------
+! Bell Archive -- the Warden.
+! ---------------------------------------------------------------------
+Object bell_archive "Bell Archive"
+  with description
+       "The last room of the world that remembers itself. Shelves rise
+        into blackness, full of bells instead of books -- every bell a
+        record, every record a thing that was rung once and answered.
+        South returns to the Approach.",
+       s_to bell_approach,
+  has light;
+
+Object bell_warden "Bell Warden" bell_archive
+  class KEnemy
+  with name 'bell' 'warden',
+       article "the",
+       e_hp 36, e_maxhp 36, e_glim 120,
+       description [;
+           if (self.e_alive)
+               print "Tall as the shelving, robed in the archive's last
+                      grey, carrying a bell-hammer like a full stop. It
+                      has been waiting to finish the sentence of Veyra
+                      for a very long time.";
+           else
+               print "The Bell Warden kneels in the dust of its own
+                      archive, bell-hammer down, at peace and at an
+                      end.";
+       ],
+       turn_rule [   drain;
+           ! Phase two: below half, the bell tolls faster and its hits
+           ! shake stamina out of your grip -- stamina pressure.
+           if (self.e_phase2 == 0 && self.e_hp <= 17) {
+               self.e_phase2 = 1;
+               self.e_state = 0; self.e_beat = FOE_NORMAL;
+               print "^Deep in the shelves, the great bell begins to toll
+                      -- faster now, and hungry. The Warden's blows will
+                      shake the stamina from your hands.^";
+               return;
+           }
+           drain = self.e_phase2;
+           if (self.e_phase2 == 0) {
+               switch (self.e_state) {
+               0:  print "^The Bell Warden swings the bell-hammer in a
+                          wide, unhurried arc.^";
+                   EnemyHit(self, 5);
+                   self.e_state = 1; self.e_beat = FOE_TELEGRAPH;
+               1:  print "^The Bell Warden raises the bell-hammer to its
+                          full height, and every small bell in the room
+                          leans away -- the SLAM lands NEXT round.
+                          GUARD or EVADE.^";
+                   self.e_state = 2; self.e_beat = FOE_HEAVY;
+               2:  print "^The bell-hammer comes down like the end of a
+                          word.^";
+                   EnemyHit(self, 11);
+                   self.e_state = 3; self.e_beat = FOE_RECOVER;
+               3:  print "^The Bell Warden sways, bell-hammer buried in
+                          the floor -- EXPOSED. Punish it.^";
+                   self.e_state = 4; self.e_beat = FOE_TELEGRAPH;
+               4:  print "^The Bell Warden rings a handbell twice, light
+                          and quick -- a FLURRY lands NEXT round.^";
+                   self.e_state = 5; self.e_beat = FOE_HEAVY;
+               5:  print "^The bell-hammer flickers, near as fast as
+                          thought.^";
+                   if (EnemyHit(self, 4) == false) EnemyHit(self, 4);
+                   self.e_state = 6; self.e_beat = FOE_RECOVER;
+               6:  print "^The Bell Warden's shoulders drop, breath
+                          sawing -- EXPOSED. Punish it.^";
+                   self.e_state = 0; self.e_beat = FOE_NORMAL;
+               }
+           } else {
+               switch (self.e_state) {
+               0:  print "^The Bell Warden swings the bell-hammer, and
+                          the tolling runs up your arms.^";
+                   if (EnemyHit(self, 5) == false && drain &&
+                       guarding == 0 && evading == 0) {
+                       player_stam = player_stam - 2; ClampStam();
+                       print "The tolling shakes your grip. (-2 Stamina)^";
+                   }
+                   self.e_state = 1; self.e_beat = FOE_TELEGRAPH;
+               1:  print "^The bell-hammer rises to its full height --
+                          the SLAM lands NEXT round. GUARD or EVADE.^";
+                   self.e_state = 2; self.e_beat = FOE_HEAVY;
+               2:  print "^The bell-hammer comes down like a verdict.^";
+                   if (EnemyHit(self, 11) == false && drain &&
+                       guarding == 0 && evading == 0) {
+                       player_stam = player_stam - 2; ClampStam();
+                       print "The tolling shakes your grip. (-2 Stamina)^";
+                   }
+                   self.e_state = 3; self.e_beat = FOE_TELEGRAPH;
+               3:  print "^A handbell rings twice -- a FLURRY lands NEXT
+                          round.^";
+                   self.e_state = 4; self.e_beat = FOE_HEAVY;
+               4:  print "^The bell-hammer flickers twice, tolling as it
+                          comes.^";
+                   if (EnemyHit(self, 4) == false) {
+                       if (EnemyHit(self, 4) == false && drain &&
+                           guarding == 0 && evading == 0) {
+                           player_stam = player_stam - 2; ClampStam();
+                           print "The tolling shakes your grip.
+                                  (-2 Stamina)^";
+                       }
+                   }
+                   self.e_state = 5; self.e_beat = FOE_RECOVER;
+               5:  print "^The Bell Warden reels, tolling ragged --
+                          EXPOSED. Punish it.^";
+                   self.e_state = 0; self.e_beat = FOE_NORMAL;
+               }
+           }
+       ],
+  has animate;
+
+Object lantern_core "Lantern Core"
+  with name 'lantern' 'core',
+       article "the",
+       description "The heart of the first lantern, bright as a held
+                    breath. It weighs almost nothing. It weighs
+                    everything.",
+       after [;
+           Take:
+               print "^You lift the Lantern Core, and the dark of Veyra --
+                      drawer by drawer, bell by bell -- begins, quietly,
+                      to give the light back.^^";
+               print "THE LANTERN BELOW IS LIT.^";
+               print "You recovered the Lantern Core and defeated the
+                      Bell Warden. Veyra will keep its records in the
+                      light from now on.^";
+               deadflag = 2;
+       ];
+
+! ---------------------------------------------------------------------
+! The fallen glimmer: what death leaves behind.
+! ---------------------------------------------------------------------
+Object fallen_glimmer "your fallen glimmer"
+  with name 'fallen' 'glimmer',
+       article "your",
+       description "Your own glimmer, spilled where you fell, holding
+                    its shape out of something like loyalty.",
+       before [;
+           Take:
+               glimmer = glimmer + drop_amount;
+               print "You gather yourself back up. +", drop_amount,
+                     " glimmer recovered. (Glimmer ", glimmer, ")^";
+               drop_amount = 0;
+               remove self;
+               rtrue;
+       ];
+
+! ---------------------------------------------------------------------
+! Verbs. (Strike/HeavyStrike/Guard/Evade/Rest/Status/Repeat/Strengthen
+! are new actions; their Sub routines live in the engine section.)
+! ---------------------------------------------------------------------
+Verb 'strike'
+    * -> Strike
+    * noun -> Strike;
+Verb 'heavy'
+    * -> HeavyStrike
+    * 'strike' -> HeavyStrike;
+Verb 'guard'
+    * -> Guard;
+Verb 'evade' 'dodge'
+    * -> Evade;
+Verb 'rest'
+    * -> Rest;
+Verb 'status'
+    * -> Status;
+Verb 'repeat'
+    * -> Repeat;
+Verb 'strengthen'
+    * 'health' -> StrengthenHealth
+    * 'stamina' -> StrengthenStamina
+    * 'strength' -> StrengthenStrength;
+Extend 'attack'
+    * -> Strike;
+Verb 'help'
+    * -> Help;
