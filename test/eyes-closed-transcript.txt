@@ -1,0 +1,244 @@
+EYES-CLOSED ACCEPTANCE — voice in (Muse Voice Transcribe via proxy + flite test voice),
+narration captured at the NarrationService boundary; the driver never reads the screen model.
+Date: 2026-10-27T19:18:22.096Z
+
+proxy health: apiConfigured=true voiceIn=true voiceOut=device art=true
+PASS  proxy reports the API configured
+
+== EYES CLOSED: The Lantern Below — full run ==
+  [lantern-below] opening narration: The archive-city of Veyra has gone dark, and its records with it. You are a Wayfarer: one who reawakens at lanterns. Somewhere bel
+PASS  boot gate: the narration names the city
+  [lantern-below] say "status" -> heard "status" -> sent "status"
+      heard back: WAYFARER HP 24 / 24 Stamina 12 / 12 Glimmer 0 Strength +0 Last lantern: the Lantern Atrium >
+PASS  gate after "status" — Stamina
+  [lantern-below] say "help" -> heard "help" -> sent "help"
+      heard back: THE LANTERN BELOW -- how to play Move with compass directions (NORTH, SOUTH, EAST, WEST, UP, DOWN). LOOK and EXAMINE tell you what
+PASS  gate after "help" — STATUS
+  [lantern-below] say "look" -> heard "Look." -> sent "look"
+      heard back: Lantern Atrium A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's lantern burns 
+PASS  gate after "look" — Lantern Atrium
+  [lantern-below] say "north" -> heard "North." -> sent "north"
+      heard back: Sunken Steps A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the walls -- this was a
+PASS  gate after "north" — Sunken Steps
+  [lantern-below] say "strike" -> heard "Strike!" -> sent "Strike"
+      heard back: You strike the Archive Thrall for 4 damage. (HP 21/24, Stamina 9/12, Glimmer 0) The Archive Thrall raises its rusted blade high ov
+PASS  gate after "strike" — Thrall
+  [lantern-below] say "evade" -> heard " evade." -> sent "evade"
+      heard back: You coil, ready to slip the next blow entirely. (HP 21/24, Stamina 8/12, Glimmer 0) The Archive Thrall brings the blade down with 
+PASS  gate after "evade" — Thrall
+  [lantern-below] say "heavy strike" -> heard "heavy strike." -> sent "heavy strike"
+      heard back: The Archive Thrall is exposed -- you punish it. You strike the Archive Thrall for 12 damage. (HP 21/24, Stamina 2/12, Glimmer 0) T
+PASS  gate after "heavy strike" — comes apart
+  [lantern-below] say "east" -> heard "east" -> sent "east"
+      heard back: Dusty Gallery Portraits of the archive's founders, every face scratched out with the same patient hand. A stone tablet leans by th
+PASS  gate after "east" — Dusty Gallery
+  [lantern-below] say "read tablet" -> heard "Red tablet.." -> sent "Red tablet"
+      heard back: That's not a verb I recognise. >
+      game did not understand; repeating in another voice
+      retry heard "Ready tablet." -> sent "Ready tablet"
+      heard back: That's not a verb I recognise. >
+  [lantern-below] say "examine tablet" -> heard " exam in tablet." -> sent "exam in tablet"
+      heard back: That's not a verb I recognise. >
+      game did not understand; repeating in another voice
+      retry heard " examine tablet.." -> sent "examine tablet"
+      heard back: THE TABLET: 'We did not lose the light. We filed it. Drawer by drawer, bell by bell, we put the light away where nothing could wan
+PASS  gate after "read tablet" — did not lose the light
+  [lantern-below] say "search crack" -> heard "Search correct." -> sent "Search correct"
+      heard back: You can't see any such thing. >
+      game did not understand; repeating in another voice
+      retry heard "Search crack." -> sent "Search crack"
+      heard back: Behind the crack: a miser's drawer that was never catalogued. A cache of glimmer glints in the dark. >
+PASS  gate after "search crack" — glimmer
+  [lantern-below] say "take glimmer" -> heard "Take limer." -> sent "Take limer"
+      heard back: You can't see any such thing. >
+      game did not understand; repeating in another voice
+      retry heard "Take blame." -> sent "Take blame"
+      heard back: You can't see any such thing. >
+  [lantern-below] say "take all" -> heard "Take all." -> sent "Take all"
+      heard back: cache of glimmer: You gather the cache. +25 glimmer. (Glimmer 55) >
+PASS  gate after "take glimmer" — You gather the cache|Taken
+  [lantern-below] say "inventory" -> heard "Inventory." -> sent "inventory"
+      heard back: You're carrying nothing. >
+PASS  gate after "inventory" — carrying
+  [lantern-below] say "west" -> heard "West." -> sent "west"
+      heard back: Sunken Steps A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the walls -- this was a
+PASS  gate after "west" — Sunken Steps
+  [lantern-below] say "south" -> heard "South." -> sent "south"
+      heard back: Lantern Atrium A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's lantern burns 
+PASS  gate after "south" — Lantern Atrium
+  [lantern-below] say "rest" -> heard "Rest." -> sent "rest"
+      heard back: You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 24/24, Stamina 12/12, Glimmer 55) The lantern will al
+PASS  gate after "rest" — You rest in the lantern light
+  [lantern-below] say "north" -> heard "North." -> sent "north"
+      heard back: Sunken Steps A broad stair drowned in its own dust, descending out of the Atrium's light. Shelf-husks line the walls -- this was a
+PASS  gate after "north" — Sunken Steps
+  [lantern-below] say "north" -> heard "North." -> sent "north"
+      heard back: Flooded Stacks Ankle-deep black water between drowned shelving. Every step sets the whole room gently sloshing, and the shelves an
+PASS  gate after "north" — Flooded Stacks
+  [lantern-below] say "attack sentinel" -> heard "attack sentinel" -> sent "attack sentinel"
+      heard back: You strike the Rusted Sentinel for 4 damage. (HP 17/24, Stamina 9/12, Glimmer 55) The Rusted Sentinel swings its halberd in a slow
+PASS  gate after "attack sentinel" — Sentinel
+  [lantern-below] say "strike" -> heard "strike" -> sent "strike"
+      heard back: You strike the Rusted Sentinel for 4 damage. (HP 13/24, Stamina 6/12, Glimmer 55) The Rusted Sentinel drags its halberd back throu
+PASS  gate after "strike" — Sentinel
+  [lantern-below] say "guard" -> heard "Guard!" -> sent "Guard"
+      heard back: You set your feet and raise your guard. (Stamina recovers.) (HP 13/24, Stamina 10/12, Glimmer 55) The Rusted Sentinel sweeps the h
+PASS  gate after "guard" — raise your guard|set your feet
+  [lantern-below] say "heavy strike" -> heard "Heavy strike." -> sent "Heavy strike"
+      heard back: The Rusted Sentinel is exposed -- you punish it. You strike the Rusted Sentinel for 12 damage. (HP 13/24, Stamina 4/12, Glimmer 55
+PASS  gate after "heavy strike" — Sentinel
+  [lantern-below] say "strike" -> heard "Strike!" -> sent "Strike"
+      heard back: You strike the Rusted Sentinel for 4 damage. (HP 13/24, Stamina 1/12, Glimmer 55) The Rusted Sentinel comes apart like wet paper. 
+PASS  gate after "strike" — comes apart
+  [lantern-below] say "east" -> heard "east" -> sent "east"
+      heard back: Lever Chamber A service room of pipes and one honest lever, in a house of dishonest machinery. The pipes run north, toward the iro
+PASS  gate after "east" — Lever Chamber
+  [lantern-below] say "pull lever" -> heard "12 lever." -> sent "12 lever"
+      heard back: That's not a verb I recognise. >
+      game did not understand; repeating in another voice
+      retry heard "pull however." -> sent "pull however"
+      heard back: You can't see any such thing. >
+  [lantern-below] say "push lever" -> heard "push lever." -> sent "push lever"
+      heard back: The lever goes over with a clang that walks through the pipes and comes back as a sigh. Somewhere north, the iron door unlocks. >
+PASS  gate after "pull lever" — goes over with a clang|already over
+  [lantern-below] say "west" -> heard "West." -> sent "west"
+      heard back: Flooded Stacks Ankle-deep black water between drowned shelving. Every step sets the whole room gently sloshing, and the shelves an
+PASS  gate after "west" — Flooded Stacks
+  [lantern-below] say "open iron door" -> heard "Open iron door." -> sent "Open iron door"
+      heard back: You open the iron door. >
+PASS  gate after "open iron door" — You open the iron door|already open
+  [lantern-below] say "north" -> heard "North." -> sent "north"
+      heard back: Bell Approach A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive waits north. In
+PASS  gate after "north" — Bell Approach
+  [lantern-below] say "open shaft" -> heard "Open shift!" -> sent "Open shift"
+      heard back: You can't see any such thing. >
+      game did not understand; repeating in another voice
+      retry heard "open shaft" -> sent "open shaft"
+      heard back: You haul the bar aside from this side. The shaft stands open -- a short way down to the Atrium, from now on. You open the cracked 
+PASS  gate after "open shaft" — haul the bar aside
+  [lantern-below] say "down" -> heard "down" -> sent "down"
+      heard back: Lantern Atrium A round chamber of cold, well-fitted stone, older than the city above it. In the centre a wayfarer's lantern burns 
+PASS  gate after "down" — Atrium|Steps
+  [lantern-below] say "up" -> heard "up" -> sent "up"
+      heard back: Bell Approach A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive waits north. In
+PASS  gate after "up" — Bell Approach
+  [lantern-below] say "strengthen health" -> heard "Strength and health..!" -> sent "strengthen health"
+      heard back: Warmth settles in your chest. Maximum HP is now 28. (Rest to fill it.) >
+PASS  gate after "strengthen health" — Maximum HP is now
+  [lantern-below] say "rest" -> heard "Rest!" -> sent "rest"
+      heard back: You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 28/28, Stamina 12/12, Glimmer 65) The lantern will al
+PASS  gate after "rest" — You rest in the lantern light
+  [lantern-below] say "north" -> heard "North." -> sent "north"
+      heard back: Bell Archive The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead of books -- ever
+PASS  gate after "north" — Bell Archive
+  [lantern-below] say "wait" -> heard "Wait." -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 12/12, Glimmer 65) The Bell Warden raises 
+  [lantern-below] say "wait" -> heard "Wait." -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 12/12, Glimmer 65) The bell-hammer comes d
+  [lantern-below] say "repeat" -> heard "Repeat." -> sent "repeat"
+      heard back: The fight, as it stands: the Bell Warden has 36 of 36 HP left. It is EXPOSED: strike now for bonus damage. (HP 12/28, Stamina 12/1
+  [lantern-below] say "wait" -> heard " wait!" -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 12/28, Stamina 12/12, Glimmer 65) The Bell Warden rings a
+  [lantern-below] say "wait" -> heard "Wait!" -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 12/28, Stamina 12/12, Glimmer 65) The bell-hammer flicker
+  [lantern-below] say "wait" -> heard "Wait!" -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 4/28, Stamina 12/12, Glimmer 65) The Bell Warden's should
+  [lantern-below] say "wait" -> heard "Wait!" -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 4/28, Stamina 12/12, Glimmer 65) The Bell Warden swings t
+  [lantern-below] say "status" -> heard "status" -> sent "status"
+      heard back: WAYFARER HP 28 / 28 Stamina 12 / 12 Glimmer 0 Strength +0 Last lantern: the Bell Approach Fallen glimmer waiting: 65 >
+PASS  gate after "status" — Glimmer\s+0
+  [lantern-below] say "north" -> heard "North" -> sent "north"
+      heard back: Bell Archive The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead of books -- ever
+PASS  gate after "north" — Bell Archive
+  [lantern-below] say "take glimmer" -> heard "Take limer.." -> sent "Take limer"
+      heard back: You can't see any such thing. >
+      game did not understand; repeating in another voice
+      retry heard "Take blame." -> sent "Take blame"
+      heard back: You can't see any such thing. >
+  [lantern-below] say "take all" -> heard "Take all." -> sent "Take all"
+      heard back: your fallen glimmer: You gather yourself back up. +65 glimmer recovered. (Glimmer 65) The bell-hammer comes down like the end of a
+PASS  gate after "take glimmer" — glimmer recovered
+  [lantern-below] say "south" -> heard "South." -> sent "south"
+      heard back: Bell Approach A gallery hung with small, careful bells, each labelled with the name of a silence. The Bell Archive waits north. In
+PASS  gate after "south" — Bell Approach
+  [lantern-below] say "rest" -> heard "Rest." -> sent "rest"
+      heard back: You rest in the lantern light. Wounds close; the dark resets its pieces. (HP 28/28, Stamina 12/12, Glimmer 65) The lantern will al
+PASS  gate after "rest" — lantern
+  [lantern-below] say "north" -> heard "North" -> sent "north"
+      heard back: Bell Archive The last room of the world that remembers itself. Shelves rise into blackness, full of bells instead of books -- ever
+PASS  gate after "north" — Bell Archive
+  [lantern-below] say "strike" -> heard "strike" -> sent "strike"
+      heard back: You strike the Bell Warden for 4 damage. (HP 23/28, Stamina 9/12, Glimmer 65) The Bell Warden raises the bell-hammer to its full h
+PASS  gate after "strike" — Warden
+  [lantern-below] say "guard" -> heard "Guard." -> sent "Guard"
+      heard back: You set your feet and raise your guard. (Stamina recovers.) (HP 23/28, Stamina 12/12, Glimmer 65) The bell-hammer comes down like 
+PASS  gate after "guard" — Warden
+  [lantern-below] say "heavy strike" -> heard " heavy strike." -> sent "heavy strike"
+      heard back: The Bell Warden is exposed -- you punish it. You strike the Bell Warden for 12 damage. (HP 23/28, Stamina 6/12, Glimmer 65) The Be
+PASS  gate after "heavy strike" — Warden
+  [lantern-below] say "wait" -> heard "Wait." -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 23/28, Stamina 9/12, Glimmer 65) The Bell Warden rings a 
+  [lantern-below] say "guard" -> heard "Guard." -> sent "Guard"
+      heard back: You set your feet and raise your guard. (Stamina recovers.) (HP 23/28, Stamina 12/12, Glimmer 65) The bell-hammer flickers, near a
+  [lantern-below] say "heavy strike" -> heard "heavy strike." -> sent "heavy strike"
+      heard back: The Bell Warden is exposed -- you punish it. You strike the Bell Warden for 12 damage. (HP 23/28, Stamina 6/12, Glimmer 65) Deep i
+PASS  gate after "heavy strike" — Warden
+  [lantern-below] say "strike" -> heard "Strike." -> sent "Strike"
+      heard back: You strike the Bell Warden for 4 damage. (HP 23/28, Stamina 3/12, Glimmer 65) The Bell Warden swings the bell-hammer, and the toll
+  [lantern-below] say "wait" -> heard "Wait!" -> sent "wait"
+      heard back: You hold your ground and catch your breath, eyes on the Bell Warden. (HP 18/28, Stamina 4/12, Glimmer 65) The bell-hammer rises to
+  [lantern-below] say "guard" -> heard "Guard." -> sent "Guard"
+      heard back: You set your feet and raise your guard. (Stamina recovers.) (HP 18/28, Stamina 8/12, Glimmer 65) The bell-hammer comes down like a
+  [lantern-below] say "strike" -> heard "Strike." -> sent "Strike"
+      heard back: You strike the Bell Warden for 4 damage. (HP 18/28, Stamina 5/12, Glimmer 65) The Bell Warden comes apart like wet paper. +120 gli
+PASS  gate after "strike" — comes apart
+  [lantern-below] say "take core" -> heard "take core." -> sent "take core"
+      heard back: You lift the Lantern Core, and the dark of Veyra -- drawer by drawer, bell by bell -- begins, quietly, to give the light back. THE
+PASS  gate after "take core" — THE LANTERN BELOW IS LIT
+PASS  the run died and dropped its glimmer (heard, not seen)
+PASS  the Warden's tolling phase was heard
+PASS  all three enemies fell, by narration count — 3 falls heard
+PASS  the Lantern Core ended the game lit
+  [lantern-below] say "quit" -> heard " Quit." -> sent "Quit"
+      heard back: 
+
+== EYES CLOSED: Figaro — a session with save/restore by voice ==
+  [figaro] opening narration: You suspect your wife Susanna of adultery. So you have convinced everyone that you are gone on a trip to Córdoba, and have hidden 
+PASS  boot gate: banner and first room heard
+  [figaro] say "look" -> heard "Look." -> sent "look"
+      heard back: Bedroom (in the trunk) You have hidden yourself in a trunk, which is currently closed. You can peek through the keyhole, if you so
+PASS  gate after "look" — trunk
+  [figaro] say "peek through keyhole" -> heard "Peek through keyhole." -> sent "Peek through keyhole"
+      heard back: You peek, but no, she isn't here yet. You'll have to wait a bit longer. >
+PASS  gate after "peek through keyhole" — peek
+  [figaro] say "save" -> heard "Save!" -> sent "save"
+      heard back: Ok. >
+PASS  gate after "save" — Ok\.
+PASS  the save the game made is a Quetzal file
+  [figaro] say "wait" -> heard "Wait." -> sent "wait"
+      heard back: Time passes. >
+  [figaro] say "restore" -> heard "Restore," -> sent "restore"
+      heard back: Ok. >
+  [figaro] say "look" -> heard "Look!" -> sent "look"
+      heard back: Bedroom (in the trunk) You have hidden yourself in a trunk, which is currently closed. You can peek through the keyhole, if you so
+PASS  gate after "look" — trunk
+PASS  the look after restore matches the look before the save — identical narration
+
+== voice-path fidelity ==
+ASR misses (no transcript at all): 0
+deviations (intended vs finally sent): 11
+  "read tablet" heard as "Red tablet.." -> sent "Red tablet"
+  "read tablet" heard as "Ready tablet." -> sent "Ready tablet"
+  "examine tablet" heard as " exam in tablet." -> sent "exam in tablet"
+  "search crack" heard as "Search correct." -> sent "Search correct"
+  "take glimmer" heard as "Take limer." -> sent "Take limer"
+  "take glimmer" heard as "Take blame." -> sent "Take blame"
+  "pull lever" heard as "12 lever." -> sent "12 lever"
+  "pull lever" heard as "pull however." -> sent "pull however"
+  "open shaft" heard as "Open shift!" -> sent "Open shift"
+  "take glimmer" heard as "Take limer.." -> sent "Take limer"
+  "take glimmer" heard as "Take blame." -> sent "Take blame"
+PASS  every intended command produced a transcript
+
+ALL CHECKS PASSED

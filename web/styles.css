@@ -1,0 +1,188 @@
+/* Galileo / Z-Games shell — true-dark, high contrast, large targets.
+   v1.2 (owner phone review): the layout is fluid at every width.
+   The v1.0 sheet broke on phones three ways — it only switched to a
+   single column under 900px but kept shrink-to-fit sizing there, so
+   the transcript's longest unwrapped line set the stage width (461px
+   on a 411px phone, measured); the top bar was a non-wrapping flex
+   row whose action group had no styles of its own; and an 18px base
+   with 60px chrome read as "everything huge" at phone widths.
+   This sheet fixes the roots: grid with minmax(0,…) tracks so no
+   content can size the layout, a wrapping header, a fluid type scale
+   (16px phone / 18px desktop, Large type preserved), ~44px targets,
+   and a sans UI chrome over the serif story text. */
+:root {
+  --bg: #0b0b0f;
+  --panel: #17171f;
+  --panel2: #1f1f2a;
+  --ink: #f2f0e9;
+  --dim: #b9b4a6;
+  --accent: #ffd257;
+  --accent2: #7fd4ff;
+  --line: #34343f;
+  --radius: 12px;
+  --font-size: 16px;
+  --ui-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+@media (min-width: 961px) {
+  :root { --font-size: 18px; }
+}
+* { box-sizing: border-box; }
+html {
+  margin: 0; padding: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0; padding: 0;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: var(--font-size);
+  line-height: 1.55;
+}
+body.large-type { --font-size: 20px; }
+@media (min-width: 961px) {
+  body.large-type { --font-size: 22px; }
+}
+button, input { font: inherit; color: inherit; }
+button {
+  font-family: var(--ui-font);
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.55em 0.95em;
+  cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+button:hover, button:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 1px; }
+img, canvas, svg { max-width: 100%; }
+
+/* ---- header ---- */
+.topbar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 0.5em 1em;
+  padding: 0.6em 1em; border-bottom: 1px solid var(--line);
+}
+.topbar h1 {
+  font-family: var(--ui-font);
+  font-size: 1.25em; margin: 0; letter-spacing: 0.01em; white-space: nowrap;
+}
+.top-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.45em;
+  font-family: var(--ui-font);
+}
+.top-actions .games-label { color: var(--dim); font-size: 0.9em; }
+.top-actions button, .top-actions .file-btn { min-height: 44px; padding: 0.5em 0.85em; font-size: 0.92em; }
+
+/* ---- demo bar ---- */
+.demo-bar { display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center; padding: 0.55em 1em; border-bottom: 1px solid var(--line); background: var(--panel); }
+.demo-run { background: var(--accent); color: #191408; font-weight: bold; border-color: var(--accent); }
+.demo-caption { margin: 0; color: var(--dim); font-style: italic; flex: 1 1 12em; min-width: 0; }
+.thin { color: var(--dim); font-weight: normal; }
+.file-btn {
+  background: var(--panel2); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.55em 0.95em; cursor: pointer; display: inline-block;
+  font-family: var(--ui-font);
+}
+
+/* ---- layout: grid tracks that content cannot stretch ---- */
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  gap: 1em; padding: 1em; align-items: start;
+  max-width: 1440px; margin: 0 auto;
+}
+.stage { min-width: 0; }
+.side { min-width: 0; display: flex; flex-direction: column; gap: 1em; }
+@media (max-width: 960px) {
+  main { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- stage ---- */
+.status-bar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.3em 1em;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.5em 0.9em; margin-bottom: 0.7em; font-weight: bold;
+  font-family: var(--ui-font); font-size: 0.95em;
+}
+.status-nums { color: var(--accent); margin-left: auto; }
+.transcript {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.9em 1em; min-height: 300px; max-height: 52vh; overflow-y: auto;
+  white-space: pre-wrap; overflow-wrap: anywhere; word-wrap: break-word;
+}
+.transcript .turn { margin: 0 0 0.9em 0; }
+.transcript .cmd { color: var(--accent2); font-weight: bold; }
+.transcript .seg.speaking { background: rgba(255, 210, 87, 0.22); border-radius: 4px; }
+.narration-bar { display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; margin: 0.7em 0; font-family: var(--ui-font); font-size: 0.95em; }
+.narration-bar button { min-height: 44px; padding: 0.45em 0.8em; }
+.rate { display: flex; align-items: center; gap: 0.4em; color: var(--dim); flex: 1 1 9em; max-width: 16em; }
+.rate input { flex: 1; min-width: 0; }
+.sayit { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75em; }
+.sayit-row { display: flex; gap: 0.5em; }
+.sayit-row input {
+  flex: 1 1 auto; min-width: 0; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.6em 0.8em; min-height: 48px; font-size: 1em;
+}
+.sayit-row button { flex: 0 0 auto; }
+.mic { border-color: var(--accent2); }
+.send { background: var(--accent); color: #191408; font-weight: bold; border-color: var(--accent); }
+.heard-as { color: var(--dim); min-height: 1.4em; padding-top: 0.3em; font-style: italic; }
+.fav-row { display: flex; gap: 0.5em; align-items: flex-start; margin-top: 0.4em; flex-wrap: wrap; }
+.favorites { display: flex; gap: 0.4em; flex-wrap: wrap; }
+.favorites button { min-height: 40px; padding: 0.3em 0.7em; }
+.big-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5em, 1fr)); gap: 0.5em; margin-top: 0.7em; }
+.big-actions button, .big-actions .file-btn {
+  min-height: 52px; font-size: 1em; font-weight: bold;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+}
+
+/* ---- side panels ---- */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.8em 0.9em; }
+.panel h2 {
+  margin: 0.1em 0 0.6em 0; font-size: 0.82em; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--dim); font-family: var(--ui-font);
+}
+.compass { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
+.compass button, .compass-row2 button { min-height: 52px; font-weight: bold; padding: 0.4em 0.3em; }
+.compass-row2 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4em; margin-top: 0.4em; }
+.compass button.known, .compass-row2 button.known { border-color: var(--accent); color: var(--accent); }
+.compass button.named, .compass-row2 button.named { border-color: var(--accent2); border-style: dashed; color: var(--accent2); }
+.compass button .dest { display: block; font-size: 0.62em; font-weight: normal; color: var(--dim); overflow-wrap: anywhere; }
+.hint { color: var(--dim); font-size: 0.85em; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4em; margin-bottom: 0.7em; }
+.chip { background: var(--panel2); border: 1px solid var(--line); border-radius: 999px; padding: 0.25em 0.8em; font-family: var(--ui-font); font-size: 0.92em; }
+.chip.ghost { color: var(--dim); border-style: dashed; }
+#fogMap { width: 100%; height: auto; background: #08080c; border: 1px solid var(--line); border-radius: var(--radius); }
+#map3d { width: 100%; height: auto; background: #08080c; border: 1px solid var(--line); border-radius: var(--radius); }
+.foot { padding: 0.5em 1em 1.2em; color: var(--dim); font-size: 0.85em; max-width: 1440px; margin: 0 auto; }
+
+.discovery-art { width: 100%; border-radius: 8px; margin-top: 8px; display: block; }
+.discovery-art[hidden] { display: none; }
+
+.obj-chip { opacity: 0.85; font-style: italic; }
+
+/* ---- phone refinements ---- */
+@media (max-width: 640px) {
+  main { padding: 0.7em; gap: 0.7em; }
+  .topbar { padding: 0.55em 0.7em; }
+  .topbar h1 { font-size: 1.12em; }
+  .top-actions { gap: 0.4em; }
+  .top-actions button, .top-actions .file-btn { padding: 0.45em 0.7em; font-size: 0.88em; }
+  .demo-bar { padding: 0.5em 0.7em; }
+  .demo-caption { flex-basis: 100%; }
+  .transcript { min-height: 36vh; padding: 0.8em 0.85em; }
+  .panel { padding: 0.7em 0.75em; }
+  .compass button, .compass-row2 button { min-height: 50px; }
+  .big-actions { grid-template-columns: repeat(auto-fit, minmax(5.8em, 1fr)); }
+  .big-actions button, .big-actions .file-btn { min-height: 50px; font-size: 0.95em; }
+  .foot { padding: 0.4em 0.7em 1em; }
+}
+@media (max-width: 380px) {
+  .sayit { padding: 0.6em; }
+  .sayit-row { gap: 0.4em; }
+  .sayit-row input { padding: 0.55em 0.6em; }
+  .compass button, .compass-row2 button { min-height: 48px; }
+}
