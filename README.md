@@ -14,11 +14,11 @@ arrive by voice, tap, or type, a locked compass and room chips answer
 "where am I, what am I carrying, where can I go" without reading a
 paragraph, and a fog map draws only the rooms you have actually visited.
 
-## Get the app (submitted build)
+## Get the app — ZBOX (submitted build)
 
-The submitted build is the Android app: **[ZBOX-v3.1.apk](https://drive.google.com/file/d/1KEcMgZWOUZDnoizPCVdWGL_c45UyKGYu/view)** — download it on your phone, allow the install when prompted, and open it.
+The submitted build is **ZBOX**, the Android app: **[ZBOX-v3.1.apk](https://drive.google.com/file/d/1KEcMgZWOUZDnoizPCVdWGL_c45UyKGYu/view)** — download it on your phone, allow the install when prompted, and open it.
 
-The web shell in this repo is the same shell, and runs locally with `node server/proxy.mjs` (see **Run it** below).
+ZBOX ships from the shell line in this repo; the web shell here runs locally with `node server/proxy.mjs` (see **Run it** below).
 
 ## Built during the event
 
